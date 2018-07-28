@@ -11,7 +11,6 @@ void printArray(int (&map)[20][20]){
         cout <<endl;
     }
 }
-//rohit has a cat
 
 void directionLeft(int *direction){
     if(!(*direction-1<0)){
