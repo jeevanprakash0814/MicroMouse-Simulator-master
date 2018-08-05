@@ -84,19 +84,21 @@ void microMouseServer::studentAI()
         } else {
             timesRight = map[y][x + 1];
         }
-        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft < timesRight) && !isWallRight()) ) ){
+        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft > timesRight) && !isWallRight()) ) ){
             turnLeft();
             directionLeft(&direction);
             lefts++;
             rights=0;
-            forwards=0;
+            //forwards=0;
             moveForward();
             movement(&x, &y, &direction);
-            forwards++;
+            //forwards++;
         }
         else if(!isWallForward() && !( (timesLeft > timesRight) && !isWallRight() ) ){
             moveForward();
-            forwards++;
+            lefts = 0;
+            rights = 0;
+            //forwards++;
             movement(&x, &y, &direction);
         }
         else if(!isWallRight()){
@@ -104,15 +106,21 @@ void microMouseServer::studentAI()
             directionRight(&direction);
             rights++;
             lefts=0;
-            forwards=0;
+            //forwards=0;
             moveForward();
-            forwards++;
+            //forwards++;
             movement(&x, &y, &direction);
         }
         else {
             directionRight(&direction);
+            directionRight(&direction);
+            rights = 0;
+            lefts = 0;
             turnRight();
-            forwards=0;
+            turnRight();
+            moveForward();
+            movement(&x, &y, &direction);
+            //forwards=0;
         }
         break;
         case 1:
@@ -131,19 +139,21 @@ void microMouseServer::studentAI()
         } else {
             timesRight = map[y + 1][x];
         }
-        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft < timesRight) && !isWallRight()) ) ){
+        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft > timesRight) && !isWallRight()) ) ){
             turnLeft();
             directionLeft(&direction);
             lefts++;
             rights=0;
-            forwards=0;
+            //forwards=0;
             moveForward();
             movement(&x, &y, &direction);
-            forwards++;
+            //forwards++;
         }
         else if(!isWallForward() && !( (timesLeft > timesRight) && !isWallRight() ) ){
             moveForward();
-            forwards++;
+            lefts = 0;
+            rights = 0;
+            //forwards++;
             movement(&x, &y, &direction);
         }
         else if(!isWallRight()){
@@ -151,15 +161,21 @@ void microMouseServer::studentAI()
             directionRight(&direction);
             rights++;
             lefts=0;
-            forwards=0;
+            //forwards=0;
             moveForward();
-            forwards++;
+            //forwards++;
             movement(&x, &y, &direction);
         }
         else {
             directionRight(&direction);
+            directionRight(&direction);
+            rights = 0;
+            lefts = 0;
             turnRight();
-            forwards=0;
+            turnRight();
+            moveForward();
+            movement(&x, &y, &direction);
+            //forwards=0;
         }
         break;
         case 2:
@@ -178,19 +194,21 @@ void microMouseServer::studentAI()
         } else {
             timesRight = map[y][x - 1];
         }
-        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft < timesRight) && !isWallRight()) ) ){
+        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft > timesRight) && !isWallRight()) ) ){
             turnLeft();
             directionLeft(&direction);
             lefts++;
             rights=0;
-            forwards=0;
+            //forwards=0;
             moveForward();
             movement(&x, &y, &direction);
-            forwards++;
+            //forwards++;
         }
         else if(!isWallForward() && !( (timesLeft > timesRight) && !isWallRight() ) ){
             moveForward();
-            forwards++;
+            lefts = 0;
+            rights = 0;
+            //forwards++;
             movement(&x, &y, &direction);
         }
         else if(!isWallRight()){
@@ -198,15 +216,21 @@ void microMouseServer::studentAI()
             directionRight(&direction);
             rights++;
             lefts=0;
-            forwards=0;
+            //forwards=0;
             moveForward();
-            forwards++;
+            //forwards++;
             movement(&x, &y, &direction);
         }
         else {
             directionRight(&direction);
+            directionRight(&direction);
+            rights = 0;
+            lefts = 0;
             turnRight();
-            forwards=0;
+            turnRight();
+            moveForward();
+            movement(&x, &y, &direction);
+            //forwards=0;
         }
         break;
         case 3:
@@ -225,19 +249,21 @@ void microMouseServer::studentAI()
         } else {
             timesRight = map[y - 1][x];
         }
-        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft < timesRight) && !isWallRight()) ) ){
+        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft > timesRight) && !isWallRight()) ) ){
             turnLeft();
             directionLeft(&direction);
             lefts++;
             rights=0;
-            forwards=0;
+            //forwards=0;
             moveForward();
             movement(&x, &y, &direction);
-            forwards++;
+            //forwards++;
         }
         else if(!isWallForward() && !( (timesLeft > timesRight) && !isWallRight() ) ){
             moveForward();
-            forwards++;
+            lefts = 0;
+            rights = 0;
+            //forwards++;
             movement(&x, &y, &direction);
         }
         else if(!isWallRight()){
@@ -245,15 +271,21 @@ void microMouseServer::studentAI()
             directionRight(&direction);
             rights++;
             lefts=0;
-            forwards=0;
+            //forwards=0;
             moveForward();
-            forwards++;
+            //forwards++;
             movement(&x, &y, &direction);
         }
         else {
             directionRight(&direction);
+            directionRight(&direction);
+            rights = 0;
+            lefts = 0;
             turnRight();
-            forwards=0;
+            turnRight();
+            moveForward();
+            movement(&x, &y, &direction);
+            //forwards=0;
         }
         break;
     }
@@ -293,12 +325,37 @@ void microMouseServer::studentAI()
 
     */
 
+    /*
+    if you're turning right
+        turnRight
+        moveForward
+        left = 0
+        right++
+    else if you're moving forward
+        moveForward
+        left = 0
+        right = 0
+    else if youre turning rihgt
+        turnRight
+        moveForward
+        right++
+        left = 0
+    else (going back)
+        right = 0
+        left = 0
+        turnRight
+        turnRight
+        moveForward
+    */
+
     map[y][x] += 1;
 
+    /*
     if(forwards>2){
         lefts=0;
         rights=0;
     }
+    */
 
     if(lefts>=3){
         //printUI("You have found the end of the maze");
