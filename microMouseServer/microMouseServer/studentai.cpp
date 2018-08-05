@@ -7,18 +7,9 @@ void startMenu(int (&map)[20][20]){
     map[19][0] = 1;
 }
 void printArray(int (&map)[20][20]){
-    for(int i=19; i>=0; i--){
-        for(int j=0; j<20; j++){
-            cout <<map[i][j]<<" ";
-        }
-        cout <<endl;
-    }
-
-    cout <<" "<<endl;//This is how you do System.out.println in C++
-
     for(int i=0; i<20; i++){
         for(int j=0; j<20; j++){
-            cout <<map[i][j]<<" ";
+            cout <<map[i][j]<<"  ";
         }
         cout <<endl;
     }
@@ -50,7 +41,7 @@ void microMouseServer::studentAI()
     static int y = 19;
     static int lefts = 0;
     static int rights = 0;
-    static int forwards = 0;
+
     static int randomCount = 0;
     static int direction = 0;
 
