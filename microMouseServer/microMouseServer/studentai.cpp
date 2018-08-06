@@ -9,12 +9,9 @@ using namespace std;
  *
 */
 
-void startMenu(int (&map)[20][20]){
-    map[19][0] = 1;
-}
-void printArray(int (&map)[20][20]){
-    for(int i=0; i<20; i++){
-        for(int j=0; j<20; j++){
+void printArray(int (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
+    for(int i=0; i<MAZE_HEIGHT; i++){
+        for(int j=0; j<MAZE_HEIGHT; j++){
             cout <<map[i][j]<<"  ";
         }
         cout <<endl;
@@ -44,19 +41,19 @@ void movement(int *x, int *y, int *direction){
 void microMouseServer::studentAI()
 {
     static int x = 0;
-    static int y = 19;
+    static int y = MAZE_HEIGHT-1;
     static int lefts = 0;
     static int rights = 0;
 
-    static int randomCount = 0;
+    static bool beginning = true;
+
     static int direction = 0;
 
-    static int map[20][20];
+    static int map[MAZE_HEIGHT][MAZE_WIDTH];
 
-    if(randomCount<1){
-        startMenu(map);
+    if(beginning){
+        map[MAZE_HEIGHT-1][0] = 1;
     }
-    randomCount++;
 
     //y = same row;
     //x = same column;
@@ -67,302 +64,116 @@ void microMouseServer::studentAI()
     switch(direction){
         case 0:
         if(isWallLeft()){
-            timesLeft = 99;
+            timesLeft = INT_MAX;
         } else {
             timesLeft = map[y][x - 1];
         }
         if(isWallForward()){
-            timesForward = 99;
+            timesForward = INT_MAX;
         } else {
             timesForward = map[y - 1][x];
         }
         if(isWallRight()){
-            timesRight = 99;
+            timesRight = INT_MAX;
         } else {
             timesRight = map[y][x + 1];
-        }
-        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft > timesRight) && !isWallRight()) ) ){
-            turnLeft();
-            directionLeft(&direction);
-            lefts++;
-            rights=0;
-            //forwards=0;
-            moveForward();
-            movement(&x, &y, &direction);
-            //forwards++;
-        }
-        else if(!isWallForward() && !( (timesLeft > timesRight) && !isWallRight() ) ){
-            moveForward();
-            lefts = 0;
-            rights = 0;
-            //forwards++;
-            movement(&x, &y, &direction);
-        }
-        else if(!isWallRight()){
-            turnRight();
-            directionRight(&direction);
-            rights++;
-            lefts=0;
-            //forwards=0;
-            moveForward();
-            //forwards++;
-            movement(&x, &y, &direction);
-        }
-        else {
-            directionRight(&direction);
-            directionRight(&direction);
-            rights = 0;
-            lefts = 0;
-            turnRight();
-            turnRight();
-            moveForward();
-            movement(&x, &y, &direction);
-            //forwards=0;
         }
         break;
         case 1:
         if(isWallLeft()){
-            timesLeft = 99;
+            timesLeft = INT_MAX;
         } else {
             timesLeft = map[y - 1][x];
         }
         if(isWallForward()){
-            timesForward = 99;
+            timesForward = INT_MAX;
         } else {
             timesForward = map[y][x + 1];
         }
         if(isWallRight()){
-            timesRight = 99;
+            timesRight = INT_MAX;
         } else {
             timesRight = map[y + 1][x];
-        }
-        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft > timesRight) && !isWallRight()) ) ){
-            turnLeft();
-            directionLeft(&direction);
-            lefts++;
-            rights=0;
-            //forwards=0;
-            moveForward();
-            movement(&x, &y, &direction);
-            //forwards++;
-        }
-        else if(!isWallForward() && !( (timesLeft > timesRight) && !isWallRight() ) ){
-            moveForward();
-            lefts = 0;
-            rights = 0;
-            //forwards++;
-            movement(&x, &y, &direction);
-        }
-        else if(!isWallRight()){
-            turnRight();
-            directionRight(&direction);
-            rights++;
-            lefts=0;
-            //forwards=0;
-            moveForward();
-            //forwards++;
-            movement(&x, &y, &direction);
-        }
-        else {
-            directionRight(&direction);
-            directionRight(&direction);
-            rights = 0;
-            lefts = 0;
-            turnRight();
-            turnRight();
-            moveForward();
-            movement(&x, &y, &direction);
-            //forwards=0;
         }
         break;
         case 2:
         if(isWallLeft()){
-            timesLeft = 99;
+            timesLeft = INT_MAX;
         } else {
             timesLeft = map[y][x + 1];
         }
         if(isWallForward()){
-            timesForward = 99;
+            timesForward = INT_MAX;
         } else {
             timesForward = map[y + 1][x];
         }
         if(isWallRight()){
-            timesRight = 99;
+            timesRight = INT_MAX;
         } else {
             timesRight = map[y][x - 1];
-        }
-        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft > timesRight) && !isWallRight()) ) ){
-            turnLeft();
-            directionLeft(&direction);
-            lefts++;
-            rights=0;
-            //forwards=0;
-            moveForward();
-            movement(&x, &y, &direction);
-            //forwards++;
-        }
-        else if(!isWallForward() && !( (timesLeft > timesRight) && !isWallRight() ) ){
-            moveForward();
-            lefts = 0;
-            rights = 0;
-            //forwards++;
-            movement(&x, &y, &direction);
-        }
-        else if(!isWallRight()){
-            turnRight();
-            directionRight(&direction);
-            rights++;
-            lefts=0;
-            //forwards=0;
-            moveForward();
-            //forwards++;
-            movement(&x, &y, &direction);
-        }
-        else {
-            directionRight(&direction);
-            directionRight(&direction);
-            rights = 0;
-            lefts = 0;
-            turnRight();
-            turnRight();
-            moveForward();
-            movement(&x, &y, &direction);
-            //forwards=0;
         }
         break;
         case 3:
         if(isWallLeft()){
-            timesLeft = 99;
+            timesLeft = INT_MAX;
         } else {
             timesLeft = map[y + 1][x];
         }
         if(isWallForward()){
-            timesForward = 99;
+            timesForward = INT_MAX;
         } else {
             timesForward = map[y][x - 1];
         }
         if(isWallRight()){
-            timesRight = 99;
+            timesRight = INT_MAX;
         } else {
             timesRight = map[y - 1][x];
-        }
-        if( !isWallLeft() && !( ((timesLeft > timesForward) && !isWallForward()) || ((timesLeft > timesRight) && !isWallRight()) ) ){
-            turnLeft();
-            directionLeft(&direction);
-            lefts++;
-            rights=0;
-            //forwards=0;
-            moveForward();
-            movement(&x, &y, &direction);
-            //forwards++;
-        }
-        else if(!isWallForward() && !( (timesLeft > timesRight) && !isWallRight() ) ){
-            moveForward();
-            lefts = 0;
-            rights = 0;
-            //forwards++;
-            movement(&x, &y, &direction);
-        }
-        else if(!isWallRight()){
-            turnRight();
-            directionRight(&direction);
-            rights++;
-            lefts=0;
-            //forwards=0;
-            moveForward();
-            //forwards++;
-            movement(&x, &y, &direction);
-        }
-        else {
-            directionRight(&direction);
-            directionRight(&direction);
-            rights = 0;
-            lefts = 0;
-            turnRight();
-            turnRight();
-            moveForward();
-            movement(&x, &y, &direction);
-            //forwards=0;
         }
         break;
     }
 
-    /*
-    if(isWallLeft()){
-        if(isWallForward()){
-            if(isWallRight()){
-                directionRight(&direction);
-                turnRight();
-                forwards=0;
-            } else {
-                turnRight();
-                directionRight(&direction);
-                rights++;
-                lefts=0;
-                forwards=0;
-                moveForward();
-                forwards++;
-               movement(&x, &y, &direction);
-            }
-        } else {
-            moveForward();
-            forwards++;
-            movement(&x, &y, &direction);
-        }
-    } else {
+    if( !isWallLeft() && !( ((timesLeft >= timesForward) && !isWallForward()) || ((timesLeft >= timesRight) && !isWallRight()) ) ){
         turnLeft();
         directionLeft(&direction);
         lefts++;
         rights=0;
-        forwards=0;
         moveForward();
         movement(&x, &y, &direction);
-        forwards++;
     }
-
-    */
-
-    /*
-    if you're turning right
-        turnRight
-        moveForward
-        left = 0
-        right++
-    else if you're moving forward
-        moveForward
-        left = 0
-        right = 0
-    else if youre turning rihgt
-        turnRight
-        moveForward
-        right++
-        left = 0
-    else (going back)
-        right = 0
-        left = 0
-        turnRight
-        turnRight
-        moveForward
-    */
+    else if(!isWallForward() && !( (timesLeft >= timesRight) && !isWallRight() ) ){
+        moveForward();
+        lefts = 0;
+        rights = 0;
+        movement(&x, &y, &direction);
+    }
+    else if(!isWallRight()){
+        turnRight();
+        directionRight(&direction);
+        rights++;
+        lefts=0;
+        moveForward();
+        movement(&x, &y, &direction);
+    }
+    else {
+        directionRight(&direction);
+        directionRight(&direction);
+        rights = 0;
+        lefts = 0;
+        turnRight();
+        turnRight();
+        moveForward();
+        movement(&x, &y, &direction);
+    }
 
     map[y][x] += 1;
 
-    /*
-    if(forwards>2){
-        lefts=0;
-        rights=0;
-    }
-    */
-
     if(lefts>=3){
-        //printUI("You have found the end of the maze");
         printArray(map);
         foundFinish();
         lefts=0;
         rights=0;
     }
     else if(rights>=3){
-        //printUI("You have found the end of the maze");
         printArray(map);
         foundFinish();
         lefts=0;
