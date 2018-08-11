@@ -70,13 +70,15 @@ void microMouseServer::studentAI()
 
     static int direction = 0;
 
+    static list<square> queue;
     static square map[MAZE_HEIGHT][MAZE_WIDTH];
 
     if(beginning){
         populateArray(map);
         map[MAZE_HEIGHT-1][0].visits = 1;
+        queue.push_back(map[MAZE_HEIGHT-1][0]);
     }
-
+    beginning = false;
     //y = same row;
     //x = same column;
     int timesLeft = 0;
@@ -176,6 +178,22 @@ void microMouseServer::studentAI()
             map[y][x].right = &map[y][x + 1];
         }
         break;
+    }
+
+    if(!queue.empty()){
+        queue.pop_front();
+        if((map[y][x].forward != null) && (map[y][x].forward->visits<1)){
+            queue.push_back(map[y][x].forward);
+        }
+        if((map[y][x].right != null) && (map[y][x].right->visits<1)){
+            queue.push_back(map[y][x].right);
+        }
+        if((map[y][x].left != null) && (map[y][x].left->visits<1)){
+            queue.push_back(map[y][x].left);
+        }
+        if((map[y][x].bottom != null) && (map[y][x].bottom->visits<1)){
+            queue.push_back(map[y][x].bottom);
+        }
     }
 
     if( !isWallLeft() && !( ((timesLeft >= timesForward) && !isWallForward()) || ((timesLeft >= timesRight) && !isWallRight()) ) ){
