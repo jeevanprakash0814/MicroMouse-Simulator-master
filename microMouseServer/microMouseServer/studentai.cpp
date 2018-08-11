@@ -5,14 +5,35 @@ using namespace std;
 
 /*
  * Name: Jeevan Prakash
- * Version: 20180805
+ * Version: 20180811
  *
 */
 
-void printArray(int (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
+struct square{
+public:
+    int x = 0;
+    int y = 0;
+    int visits = 0;
+
+    square *forward;
+    square *right;
+    square *left;
+    square *bottom;
+};
+
+void populateArray(square (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
     for(int i=0; i<MAZE_HEIGHT; i++){
         for(int j=0; j<MAZE_HEIGHT; j++){
-            cout <<map[i][j]<<"  ";
+            map[i][j].x = j;
+            map[i][j].y = i;
+        }
+    }
+}
+
+void printArray(square (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
+    for(int i=0; i<MAZE_HEIGHT; i++){
+        for(int j=0; j<MAZE_HEIGHT; j++){
+            cout <<map[i][j].visits<<"  ";
         }
         cout <<endl;
     }
@@ -49,10 +70,11 @@ void microMouseServer::studentAI()
 
     static int direction = 0;
 
-    static int map[MAZE_HEIGHT][MAZE_WIDTH];
+    static square map[MAZE_HEIGHT][MAZE_WIDTH];
 
     if(beginning){
-        map[MAZE_HEIGHT-1][0] = 1;
+        populateArray(map);
+        map[MAZE_HEIGHT-1][0].visits = 1;
     }
 
     //y = same row;
@@ -66,68 +88,92 @@ void microMouseServer::studentAI()
         if(isWallLeft()){
             timesLeft = INT_MAX;
         } else {
-            timesLeft = map[y][x - 1];
+            timesLeft = map[y][x - 1].visits;
+            map[y][x].left = &map[y][x - 1];
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
-            timesForward = map[y - 1][x];
+            timesForward = map[y - 1][x].visits;
+            map[y][x].forward = &map[y - 1][x];
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
-            timesRight = map[y][x + 1];
+            timesRight = map[y][x + 1].visits;
+            map[y][x].right = &map[y][x + 1];
+        }
+        if(!(y+1>19)){
+            map[y][x].bottom = &map[y + 1][x];
         }
         break;
         case 1:
         if(isWallLeft()){
             timesLeft = INT_MAX;
         } else {
-            timesLeft = map[y - 1][x];
+            timesLeft = map[y - 1][x].visits;
+            map[y][x].forward = &map[y - 1][x];
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
-            timesForward = map[y][x + 1];
+            timesForward = map[y][x + 1].visits;
+            map[y][x].right = &map[y][x + 1];
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
-            timesRight = map[y + 1][x];
+            timesRight = map[y + 1][x].visits;
+            map[y][x].bottom = &map[y + 1][x];
+        }
+        if(!(x-1<0)){
+            map[y][x].left = &map[y][x - 1];
         }
         break;
         case 2:
         if(isWallLeft()){
             timesLeft = INT_MAX;
         } else {
-            timesLeft = map[y][x + 1];
+            timesLeft = map[y][x + 1].visits;
+            map[y][x].right = &map[y][x + 1];
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
-            timesForward = map[y + 1][x];
+            timesForward = map[y + 1][x].visits;
+            map[y][x].bottom = &map[y + 1][x];
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
-            timesRight = map[y][x - 1];
+            timesRight = map[y][x - 1].visits;
+            map[y][x].left = &map[y][x - 1];
+        }
+        if(!(y-1<0)){
+            map[y][x].forward = &map[y - 1][x];
         }
         break;
         case 3:
         if(isWallLeft()){
             timesLeft = INT_MAX;
         } else {
-            timesLeft = map[y + 1][x];
+            timesLeft = map[y + 1][x].visits;
+            map[y][x].bottom = &map[y + 1][x];
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
-            timesForward = map[y][x - 1];
+            timesForward = map[y][x - 1].visits;
+            map[y][x].left = &map[y][x - 1];
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
-            timesRight = map[y - 1][x];
+            timesRight = map[y - 1][x].visits;
+            map[y][x].forward = &map[y - 1][x];
+        }
+        if(!(x+1>19)){
+            map[y][x].right = &map[y][x + 1];
         }
         break;
     }
@@ -165,7 +211,7 @@ void microMouseServer::studentAI()
         movement(&x, &y, &direction);
     }
 
-    map[y][x] += 1;
+    map[y][x].visits += 1;
 
     if(lefts>=3){
         printArray(map);
