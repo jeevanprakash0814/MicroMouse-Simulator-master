@@ -14,6 +14,8 @@ public:
     int x = 0;
     int y = 0;
     int visits = 0;
+    bool visited = false;
+    bool visitable = false;
 
     square *forward;
     square *right;
@@ -92,21 +94,25 @@ void microMouseServer::studentAI()
         } else {
             timesLeft = map[y][x - 1].visits;
             map[y][x].left = &map[y][x - 1];
+            map[y][x].left->visitable = true;
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
             timesForward = map[y - 1][x].visits;
             map[y][x].forward = &map[y - 1][x];
+            map[y][x].forward->visitable = true;
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
             timesRight = map[y][x + 1].visits;
             map[y][x].right = &map[y][x + 1];
+            map[y][x].right->visitable = true;
         }
         if(!(y+1>19)){
             map[y][x].bottom = &map[y + 1][x];
+            map[y][x].bottom->visitable = true;
         }
         break;
         case 1:
@@ -115,21 +121,25 @@ void microMouseServer::studentAI()
         } else {
             timesLeft = map[y - 1][x].visits;
             map[y][x].forward = &map[y - 1][x];
+            map[y][x].forward->visitable = true;
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
             timesForward = map[y][x + 1].visits;
             map[y][x].right = &map[y][x + 1];
+            map[y][x].right->visitable = true;
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
             timesRight = map[y + 1][x].visits;
             map[y][x].bottom = &map[y + 1][x];
+            map[y][x].bottom->visitable = true;
         }
         if(!(x-1<0)){
             map[y][x].left = &map[y][x - 1];
+            map[y][x].left->visitable = true;
         }
         break;
         case 2:
@@ -138,21 +148,25 @@ void microMouseServer::studentAI()
         } else {
             timesLeft = map[y][x + 1].visits;
             map[y][x].right = &map[y][x + 1];
+            map[y][x].right->visitable = true;
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
             timesForward = map[y + 1][x].visits;
             map[y][x].bottom = &map[y + 1][x];
+            map[y][x].bottom->visitable = true;
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
             timesRight = map[y][x - 1].visits;
             map[y][x].left = &map[y][x - 1];
+            map[y][x].left->visitable = true;
         }
         if(!(y-1<0)){
             map[y][x].forward = &map[y - 1][x];
+            map[y][x].forward->visitable = true;
         }
         break;
         case 3:
@@ -161,37 +175,41 @@ void microMouseServer::studentAI()
         } else {
             timesLeft = map[y + 1][x].visits;
             map[y][x].bottom = &map[y + 1][x];
+            map[y][x].bottom->visitable = true;
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
             timesForward = map[y][x - 1].visits;
             map[y][x].left = &map[y][x - 1];
+            map[y][x].left->visitable = true;
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
             timesRight = map[y - 1][x].visits;
             map[y][x].forward = &map[y - 1][x];
+            map[y][x].forward->visitable = true;
         }
         if(!(x+1>19)){
             map[y][x].right = &map[y][x + 1];
+            map[y][x].right->visitable = true;
         }
         break;
     }
 
     if(!queue.empty()){
         queue.pop_front();
-        if((map[y][x].forward != null) && (map[y][x].forward->visits<1)){
+        if(map[y][x].forward->visited == false && map[y][x].forward->visitable == true){
             queue.push_back(map[y][x].forward);
         }
-        if((map[y][x].right != null) && (map[y][x].right->visits<1)){
+        if(map[y][x].right->visited == false && map[y][x].right->visitable == true){
             queue.push_back(map[y][x].right);
         }
-        if((map[y][x].left != null) && (map[y][x].left->visits<1)){
+        if(map[y][x].left->visited == false && map[y][x].left->visitable == true){
             queue.push_back(map[y][x].left);
         }
-        if((map[y][x].bottom != null) && (map[y][x].bottom->visits<1)){
+        if(map[y][x].bottom->visited == false && map[y][x].bottom->visitable == true){
             queue.push_back(map[y][x].bottom);
         }
     }
@@ -230,6 +248,7 @@ void microMouseServer::studentAI()
     }
 
     map[y][x].visits += 1;
+    map[y][x].visited = true;
 
     if(lefts>=3){
         printArray(map);
