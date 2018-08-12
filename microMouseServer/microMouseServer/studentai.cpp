@@ -26,7 +26,7 @@ public:
     square *bottom;
 };
 
-void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<*square> queue){
+void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue){
     queue.push_back(&map[MAZE_HEIGHT-1][0]);
     square* s;
     while(!queue.empty()){
