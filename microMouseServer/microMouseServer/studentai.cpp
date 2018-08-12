@@ -17,12 +17,55 @@ public:
     int visits = 0;
     bool visited = false;
     bool visitable = false;
+    bool shortest = false;
 
+    square *previousNode;
     square *forward;
     square *right;
     square *left;
     square *bottom;
 };
+
+void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<*square> queue){
+    queue.push_back(&map[MAZE_HEIGHT-1][0]);
+    square* s;
+    while(!queue.empty()){
+        s = queue.front();
+        if(s->forward->visited == false && s->forward->visitable == true){
+            s->forward->visited = true;
+            s->forward->previousNode = queue.back();
+            queue.push_back(s->forward);
+            //queue.back()->previousNode = s;
+        }
+        if(s->right->visited == false && s->right->visitable == true){
+            s->right->visited = true;
+            s->right->previousNode = queue.back();
+            queue.push_back(s->right);
+        }
+        if(s->left->visited == false && s->left->visitable == true){
+            s->left->visited = true;
+            s->left->previousNode = queue.back();
+            queue.push_back(s->left);
+        }
+        if(s->bottom->visited == false && s->bottom->visitable == true){
+            s->bottom->visited = true;
+            s->bottom->previousNode = queue.back();
+            queue.push_back(s->bottom);
+        }
+        queue.pop_front();
+    }
+
+    square* currentNode = s;
+    int x = currentNode->x;
+    int y = currentNode->y;
+    square* z;
+    while(x != 0 && y != 19){
+        currentNode->shortest = true;
+        currentNode = currentNode->previousNode;
+        x = currentNode->x;
+        y = currentNode->y;
+    }
+}
 
 void populateArray(square (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
     for(int i=0; i<MAZE_HEIGHT; i++){
@@ -69,6 +112,9 @@ void microMouseServer::studentAI()
     static int lefts = 0;
     static int rights = 0;
 
+    static int xFinish;
+    static int yFinish;
+
     static bool beginning = true;
 
     static int direction = 0;
@@ -79,7 +125,6 @@ void microMouseServer::studentAI()
     if(beginning){
         populateArray(map);
         map[MAZE_HEIGHT-1][0].visits = 1;
-        queue.push_back(&map[MAZE_HEIGHT-1][0]);
     }
     beginning = false;
     //y = same row;
@@ -199,23 +244,6 @@ void microMouseServer::studentAI()
         break;
     }
 
-    if(!queue.empty()){
-        square* s = queue.front();
-        queue.pop_front();
-        if(s->forward->visited == false && s->forward->visitable == true){
-            queue.push_back(s->forward);
-        }
-        if(s->right->visited == false && s->right->visitable == true){
-            queue.push_back(s->right);
-        }
-        if(s->left->visited == false && s->left->visitable == true){
-            queue.push_back(s->left);
-        }
-        if(s->bottom->visited == false && s->bottom->visitable == true){
-            queue.push_back(s->bottom);
-        }
-    }
-
     if( !isWallLeft() && !( ((timesLeft >= timesForward) && !isWallForward()) || ((timesLeft >= timesRight) && !isWallRight()) ) ){
         turnLeft();
         directionLeft(&direction);
@@ -257,12 +285,18 @@ void microMouseServer::studentAI()
         foundFinish();
         lefts=0;
         rights=0;
+        xFinish = x;
+        yFinish = y;
+        shortestPathCalculation(map, queue);
     }
     else if(rights>=3){
         printArray(map);
         foundFinish();
         lefts=0;
         rights=0;
+        xFinish = x;
+        yFinish = y;
+        shortestPathCalculation(map, queue);
     }
 
 }
