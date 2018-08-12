@@ -73,13 +73,13 @@ void microMouseServer::studentAI()
 
     static int direction = 0;
 
-    static list<square> queue;
+    static list<square*> queue;
     static square map[MAZE_HEIGHT][MAZE_WIDTH];
 
     if(beginning){
         populateArray(map);
         map[MAZE_HEIGHT-1][0].visits = 1;
-        queue.push_back(map[MAZE_HEIGHT-1][0]);
+        queue.push_back(&map[MAZE_HEIGHT-1][0]);
     }
     beginning = false;
     //y = same row;
@@ -200,19 +200,19 @@ void microMouseServer::studentAI()
     }
 
     if(!queue.empty()){
-        square s = queue.front();
+        square* s = queue.front();
         queue.pop_front();
-        if(map[y][x].forward->visited == false && s.forward->visitable == true){
-            queue.push_back(s.forward);
+        if(s->forward->visited == false && s->forward->visitable == true){
+            queue.push_back(s->forward);
         }
-        if(s.right->visited == false && s.right->visitable == true){
-            queue.push_back(s.right);
+        if(s->right->visited == false && s->right->visitable == true){
+            queue.push_back(s->right);
         }
-        if(s.left->visited == false && s.left->visitable == true){
-            queue.push_back(s.left);
+        if(s->left->visited == false && s->left->visitable == true){
+            queue.push_back(s->left);
         }
-        if(s.bottom->visited == false && s.bottom->visitable == true){
-            queue.push_back(s.bottom);
+        if(s->bottom->visited == false && s->bottom->visitable == true){
+            queue.push_back(s->bottom);
         }
     }
 
