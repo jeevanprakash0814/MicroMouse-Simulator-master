@@ -1,6 +1,7 @@
 #include "string"
 #include "micromouseserver.h"
 #include <iostream>
+#include <list>
 using namespace std;
 
 /*
