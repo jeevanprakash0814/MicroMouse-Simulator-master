@@ -200,18 +200,19 @@ void microMouseServer::studentAI()
     }
 
     if(!queue.empty()){
+        square s = queue.front();
         queue.pop_front();
-        if(map[y][x].forward->visited == false && map[y][x].forward->visitable == true){
-            queue.push_back(map[y][x].forward);
+        if(map[y][x].forward->visited == false && s.forward->visitable == true){
+            queue.push_back(s.forward);
         }
-        if(map[y][x].right->visited == false && map[y][x].right->visitable == true){
-            queue.push_back(map[y][x].right);
+        if(s.right->visited == false && s.right->visitable == true){
+            queue.push_back(s.right);
         }
-        if(map[y][x].left->visited == false && map[y][x].left->visitable == true){
-            queue.push_back(map[y][x].left);
+        if(s.left->visited == false && s.left->visitable == true){
+            queue.push_back(s.left);
         }
-        if(map[y][x].bottom->visited == false && map[y][x].bottom->visitable == true){
-            queue.push_back(map[y][x].bottom);
+        if(s.bottom->visited == false && s.bottom->visitable == true){
+            queue.push_back(s.bottom);
         }
     }
 
