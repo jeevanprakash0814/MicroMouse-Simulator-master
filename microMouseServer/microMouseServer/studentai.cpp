@@ -25,7 +25,7 @@ public:
     square *bottom;
 };
 
-void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, bool *foundShortestpath){
+void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, list<square*> shortPath, bool *foundShortestpath){
     queue.push_back(&map[MAZE_HEIGHT-1][0]);
     square* s;
     while(!queue.empty()){
@@ -65,12 +65,20 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
     square* currentNode = s;
     int x = currentNode->x;
     int y = currentNode->y;
+
+    while(currentNode->previousNode != NULL){
+        shortPath.push_back(currentNode);
+        currentNode = currentNode->previousNode;
+    }
+
+    /*
     while(x != 0 && y != 19){
         currentNode->shortest = true;
         currentNode = currentNode->previousNode;
         x = currentNode->x;
         y = currentNode->y;
-    }
+    }*/
+
     *foundShortestpath = true;
 }
 
@@ -128,6 +136,7 @@ void microMouseServer::studentAI()
     static int direction = 0;
 
     static list<square*> queue;
+    static list<square*> shortPath;
     static square map[MAZE_HEIGHT][MAZE_WIDTH];
 
     if(beginning){
@@ -238,29 +247,26 @@ void microMouseServer::studentAI()
             break;
         }
 
-        if( !isWallLeft() && !( ((timesLeft >= timesForward) && !isWallForward()) || ((timesLeft >= timesRight) && !isWallRight()) ) ){
+        if(!isWallLeft() && !(((timesLeft >= timesForward) && !isWallForward()) || ((timesLeft >= timesRight) && !isWallRight()))){
             turnLeft();
             directionLeft(&direction);
             lefts++;
             rights=0;
             moveForward();
             movement(&x, &y, &direction);
-        }
-        else if(!isWallForward() && !( (timesLeft >= timesRight) && !isWallRight() ) ){
+        } else if(!isWallForward() && !((timesLeft >= timesRight) && !isWallRight())){
             moveForward();
             lefts = 0;
             rights = 0;
             movement(&x, &y, &direction);
-        }
-        else if(!isWallRight()){
+        } else if(!isWallRight()){
             turnRight();
             directionRight(&direction);
             rights++;
             lefts=0;
             moveForward();
             movement(&x, &y, &direction);
-        }
-        else {
+        } else {
             directionRight(&direction);
             directionRight(&direction);
             rights = 0;
@@ -281,16 +287,15 @@ void microMouseServer::studentAI()
             rights=0;
             xFinish = x;
             yFinish = y;
-            shortestPathCalculation(map, queue, &foundShortestPath);
-        }
-        else if(rights>=3){
+            shortestPathCalculation(map, queue, shortPath, &foundShortestPath);
+        } else if(rights>=3){
             printArray(map);
             foundFinish();
             lefts=0;
             rights=0;
             xFinish = x;
             yFinish = y;
-            shortestPathCalculation(map, queue, &foundShortestPath);
+            shortestPathCalculation(map, queue, shortPath, &foundShortestPath);
         }
     } else {
         //re-enact calculated shortest path
