@@ -16,7 +16,6 @@ public:
     int y = 0;
     int visits = 0;
     bool visited = false;
-    bool visitable = false;
     bool shortest = false;
 
     square *previousNode;
@@ -31,26 +30,34 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
     square* s;
     while(!queue.empty()){
         s = queue.front();
-        if(s->forward->visited == false && s->forward->visitable == true){
-            s->forward->visited = true;
-            s->forward->previousNode = queue.back();
-            queue.push_back(s->forward);
-            //queue.back()->previousNode = s;
+        if(s->forward != NULL){
+            if(s->forward->visited == false){
+                s->forward->visited = true;
+                s->forward->previousNode = queue.back();
+                queue.push_back(s->forward);
+                //queue.back()->previousNode = s;
+            }
         }
-        if(s->right->visited == false && s->right->visitable == true){
-            s->right->visited = true;
-            s->right->previousNode = queue.back();
-            queue.push_back(s->right);
+        if(s->right != NULL){
+            if(s->right->visited == false){
+                s->right->visited = true;
+                s->right->previousNode = queue.back();
+                queue.push_back(s->right);
+            }
         }
-        if(s->left->visited == false && s->left->visitable == true){
-            s->left->visited = true;
-            s->left->previousNode = queue.back();
-            queue.push_back(s->left);
+        if(s->left != NULL){
+            if(s->left->visited == false){
+                s->left->visited = true;
+                s->left->previousNode = queue.back();
+                queue.push_back(s->left);
+            }
         }
-        if(s->bottom->visited == false && s->bottom->visitable == true){
-            s->bottom->visited = true;
-            s->bottom->previousNode = queue.back();
-            queue.push_back(s->bottom);
+        if(s->bottom != NULL){
+            if(s->bottom->visited == false){
+                s->bottom->visited = true;
+                s->bottom->previousNode = queue.back();
+                queue.push_back(s->bottom);
+            }
         }
         queue.pop_front();
     }
@@ -140,25 +147,21 @@ void microMouseServer::studentAI()
         } else {
             timesLeft = map[y][x - 1].visits;
             map[y][x].left = &map[y][x - 1];
-            map[y][x].left->visitable = true;
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
             timesForward = map[y - 1][x].visits;
             map[y][x].forward = &map[y - 1][x];
-            map[y][x].forward->visitable = true;
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
             timesRight = map[y][x + 1].visits;
             map[y][x].right = &map[y][x + 1];
-            map[y][x].right->visitable = true;
         }
         if(!(y+1>19)){
             map[y][x].bottom = &map[y + 1][x];
-            map[y][x].bottom->visitable = true;
         }
         break;
         case 1:
@@ -167,25 +170,22 @@ void microMouseServer::studentAI()
         } else {
             timesLeft = map[y - 1][x].visits;
             map[y][x].forward = &map[y - 1][x];
-            map[y][x].forward->visitable = true;
+
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
             timesForward = map[y][x + 1].visits;
             map[y][x].right = &map[y][x + 1];
-            map[y][x].right->visitable = true;
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
             timesRight = map[y + 1][x].visits;
             map[y][x].bottom = &map[y + 1][x];
-            map[y][x].bottom->visitable = true;
         }
         if(!(x-1<0)){
             map[y][x].left = &map[y][x - 1];
-            map[y][x].left->visitable = true;
         }
         break;
         case 2:
@@ -194,25 +194,21 @@ void microMouseServer::studentAI()
         } else {
             timesLeft = map[y][x + 1].visits;
             map[y][x].right = &map[y][x + 1];
-            map[y][x].right->visitable = true;
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
             timesForward = map[y + 1][x].visits;
             map[y][x].bottom = &map[y + 1][x];
-            map[y][x].bottom->visitable = true;
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
             timesRight = map[y][x - 1].visits;
             map[y][x].left = &map[y][x - 1];
-            map[y][x].left->visitable = true;
         }
         if(!(y-1<0)){
             map[y][x].forward = &map[y - 1][x];
-            map[y][x].forward->visitable = true;
         }
         break;
         case 3:
@@ -221,25 +217,21 @@ void microMouseServer::studentAI()
         } else {
             timesLeft = map[y + 1][x].visits;
             map[y][x].bottom = &map[y + 1][x];
-            map[y][x].bottom->visitable = true;
         }
         if(isWallForward()){
             timesForward = INT_MAX;
         } else {
             timesForward = map[y][x - 1].visits;
             map[y][x].left = &map[y][x - 1];
-            map[y][x].left->visitable = true;
         }
         if(isWallRight()){
             timesRight = INT_MAX;
         } else {
             timesRight = map[y - 1][x].visits;
             map[y][x].forward = &map[y - 1][x];
-            map[y][x].forward->visitable = true;
         }
         if(!(x+1>19)){
             map[y][x].right = &map[y][x + 1];
-            map[y][x].right->visitable = true;
         }
         break;
     }
