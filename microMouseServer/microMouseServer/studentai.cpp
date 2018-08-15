@@ -25,7 +25,7 @@ public:
     square *bottom;
 };
 
-void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue){
+void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, bool *foundShortestpath){
     queue.push_back(&map[MAZE_HEIGHT-1][0]);
     square* s;
     while(!queue.empty()){
@@ -65,13 +65,13 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
     square* currentNode = s;
     int x = currentNode->x;
     int y = currentNode->y;
-    square* z;
     while(x != 0 && y != 19){
         currentNode->shortest = true;
         currentNode = currentNode->previousNode;
         x = currentNode->x;
         y = currentNode->y;
     }
+    *foundShortestpath = true;
 }
 
 void populateArray(square (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
@@ -123,6 +123,7 @@ void microMouseServer::studentAI()
     static int yFinish;
 
     static bool beginning = true;
+    static bool foundShortestPath = false;
 
     static int direction = 0;
 
@@ -140,155 +141,160 @@ void microMouseServer::studentAI()
     int timesForward = 0;
     int timesRight = 0;
 
-    switch(direction){
-        case 0:
-        if(isWallLeft()){
-            timesLeft = INT_MAX;
-        } else {
-            timesLeft = map[y][x - 1].visits;
-            map[y][x].left = &map[y][x - 1];
-        }
-        if(isWallForward()){
-            timesForward = INT_MAX;
-        } else {
-            timesForward = map[y - 1][x].visits;
-            map[y][x].forward = &map[y - 1][x];
-        }
-        if(isWallRight()){
-            timesRight = INT_MAX;
-        } else {
-            timesRight = map[y][x + 1].visits;
-            map[y][x].right = &map[y][x + 1];
-        }
-        if(!(y+1>19)){
-            map[y][x].bottom = &map[y + 1][x];
-        }
-        break;
-        case 1:
-        if(isWallLeft()){
-            timesLeft = INT_MAX;
-        } else {
-            timesLeft = map[y - 1][x].visits;
-            map[y][x].forward = &map[y - 1][x];
+    if(!foundShortestPath){
+        switch(direction){
+            case 0:
+            if(isWallLeft()){
+                timesLeft = INT_MAX;
+            } else {
+                timesLeft = map[y][x - 1].visits;
+                map[y][x].left = &map[y][x - 1];
+            }
+            if(isWallForward()){
+                timesForward = INT_MAX;
+            } else {
+                timesForward = map[y - 1][x].visits;
+                map[y][x].forward = &map[y - 1][x];
+            }
+            if(isWallRight()){
+                timesRight = INT_MAX;
+            } else {
+                timesRight = map[y][x + 1].visits;
+                map[y][x].right = &map[y][x + 1];
+            }
+            if(!(y+1>19)){
+                map[y][x].bottom = &map[y + 1][x];
+            }
+            break;
+            case 1:
+            if(isWallLeft()){
+                timesLeft = INT_MAX;
+            } else {
+                timesLeft = map[y - 1][x].visits;
+                map[y][x].forward = &map[y - 1][x];
 
+            }
+            if(isWallForward()){
+                timesForward = INT_MAX;
+            } else {
+                timesForward = map[y][x + 1].visits;
+                map[y][x].right = &map[y][x + 1];
+            }
+            if(isWallRight()){
+                timesRight = INT_MAX;
+            } else {
+                timesRight = map[y + 1][x].visits;
+                map[y][x].bottom = &map[y + 1][x];
+            }
+            if(!(x-1<0)){
+                map[y][x].left = &map[y][x - 1];
+            }
+            break;
+            case 2:
+            if(isWallLeft()){
+                timesLeft = INT_MAX;
+            } else {
+                timesLeft = map[y][x + 1].visits;
+                map[y][x].right = &map[y][x + 1];
+            }
+            if(isWallForward()){
+                timesForward = INT_MAX;
+            } else {
+                timesForward = map[y + 1][x].visits;
+                map[y][x].bottom = &map[y + 1][x];
+            }
+            if(isWallRight()){
+                timesRight = INT_MAX;
+            } else {
+                timesRight = map[y][x - 1].visits;
+                map[y][x].left = &map[y][x - 1];
+            }
+            if(!(y-1<0)){
+                map[y][x].forward = &map[y - 1][x];
+            }
+            break;
+            case 3:
+            if(isWallLeft()){
+                timesLeft = INT_MAX;
+            } else {
+                timesLeft = map[y + 1][x].visits;
+                map[y][x].bottom = &map[y + 1][x];
+            }
+            if(isWallForward()){
+                timesForward = INT_MAX;
+            } else {
+                timesForward = map[y][x - 1].visits;
+                map[y][x].left = &map[y][x - 1];
+            }
+            if(isWallRight()){
+                timesRight = INT_MAX;
+            } else {
+                timesRight = map[y - 1][x].visits;
+                map[y][x].forward = &map[y - 1][x];
+            }
+            if(!(x+1>19)){
+                map[y][x].right = &map[y][x + 1];
+            }
+            break;
         }
-        if(isWallForward()){
-            timesForward = INT_MAX;
-        } else {
-            timesForward = map[y][x + 1].visits;
-            map[y][x].right = &map[y][x + 1];
-        }
-        if(isWallRight()){
-            timesRight = INT_MAX;
-        } else {
-            timesRight = map[y + 1][x].visits;
-            map[y][x].bottom = &map[y + 1][x];
-        }
-        if(!(x-1<0)){
-            map[y][x].left = &map[y][x - 1];
-        }
-        break;
-        case 2:
-        if(isWallLeft()){
-            timesLeft = INT_MAX;
-        } else {
-            timesLeft = map[y][x + 1].visits;
-            map[y][x].right = &map[y][x + 1];
-        }
-        if(isWallForward()){
-            timesForward = INT_MAX;
-        } else {
-            timesForward = map[y + 1][x].visits;
-            map[y][x].bottom = &map[y + 1][x];
-        }
-        if(isWallRight()){
-            timesRight = INT_MAX;
-        } else {
-            timesRight = map[y][x - 1].visits;
-            map[y][x].left = &map[y][x - 1];
-        }
-        if(!(y-1<0)){
-            map[y][x].forward = &map[y - 1][x];
-        }
-        break;
-        case 3:
-        if(isWallLeft()){
-            timesLeft = INT_MAX;
-        } else {
-            timesLeft = map[y + 1][x].visits;
-            map[y][x].bottom = &map[y + 1][x];
-        }
-        if(isWallForward()){
-            timesForward = INT_MAX;
-        } else {
-            timesForward = map[y][x - 1].visits;
-            map[y][x].left = &map[y][x - 1];
-        }
-        if(isWallRight()){
-            timesRight = INT_MAX;
-        } else {
-            timesRight = map[y - 1][x].visits;
-            map[y][x].forward = &map[y - 1][x];
-        }
-        if(!(x+1>19)){
-            map[y][x].right = &map[y][x + 1];
-        }
-        break;
-    }
 
-    if( !isWallLeft() && !( ((timesLeft >= timesForward) && !isWallForward()) || ((timesLeft >= timesRight) && !isWallRight()) ) ){
-        turnLeft();
-        directionLeft(&direction);
-        lefts++;
-        rights=0;
-        moveForward();
-        movement(&x, &y, &direction);
-    }
-    else if(!isWallForward() && !( (timesLeft >= timesRight) && !isWallRight() ) ){
-        moveForward();
-        lefts = 0;
-        rights = 0;
-        movement(&x, &y, &direction);
-    }
-    else if(!isWallRight()){
-        turnRight();
-        directionRight(&direction);
-        rights++;
-        lefts=0;
-        moveForward();
-        movement(&x, &y, &direction);
-    }
-    else {
-        directionRight(&direction);
-        directionRight(&direction);
-        rights = 0;
-        lefts = 0;
-        turnRight();
-        turnRight();
-        moveForward();
-        movement(&x, &y, &direction);
-    }
+        if( !isWallLeft() && !( ((timesLeft >= timesForward) && !isWallForward()) || ((timesLeft >= timesRight) && !isWallRight()) ) ){
+            turnLeft();
+            directionLeft(&direction);
+            lefts++;
+            rights=0;
+            moveForward();
+            movement(&x, &y, &direction);
+        }
+        else if(!isWallForward() && !( (timesLeft >= timesRight) && !isWallRight() ) ){
+            moveForward();
+            lefts = 0;
+            rights = 0;
+            movement(&x, &y, &direction);
+        }
+        else if(!isWallRight()){
+            turnRight();
+            directionRight(&direction);
+            rights++;
+            lefts=0;
+            moveForward();
+            movement(&x, &y, &direction);
+        }
+        else {
+            directionRight(&direction);
+            directionRight(&direction);
+            rights = 0;
+            lefts = 0;
+            turnRight();
+            turnRight();
+            moveForward();
+            movement(&x, &y, &direction);
+        }
 
-    map[y][x].visits += 1;
-    map[y][x].visited = true;
+        map[y][x].visits += 1;
+        map[y][x].visited = true;
 
-    if(lefts>=3){
-        printArray(map);
-        foundFinish();
-        lefts=0;
-        rights=0;
-        xFinish = x;
-        yFinish = y;
-        shortestPathCalculation(map, queue);
-    }
-    else if(rights>=3){
-        printArray(map);
-        foundFinish();
-        lefts=0;
-        rights=0;
-        xFinish = x;
-        yFinish = y;
-        shortestPathCalculation(map, queue);
+        if(lefts>=3){
+            printArray(map);
+            foundFinish();
+            lefts=0;
+            rights=0;
+            xFinish = x;
+            yFinish = y;
+            shortestPathCalculation(map, queue, &foundShortestPath);
+        }
+        else if(rights>=3){
+            printArray(map);
+            foundFinish();
+            lefts=0;
+            rights=0;
+            xFinish = x;
+            yFinish = y;
+            shortestPathCalculation(map, queue, &foundShortestPath);
+        }
+    } else {
+        //re-enact calculated shortest path
+        printUI("I calculated the shortest path");
     }
 
 }
