@@ -131,7 +131,10 @@ void microMouseServer::studentAI()
     static int yFinish;
 
     static bool beginning = true;
+    static bool beginning2 = true;
     static bool foundShortestPath = false;
+    static bool isNull = false; //I USE THIS VARIABLE IF I NEED TO BREAK FROM THE IF-ELSE CHAIN
+    //THAT IT IS BEING USED IN
 
     static int direction = 0;
 
@@ -298,6 +301,46 @@ void microMouseServer::studentAI()
             shortestPathCalculation(map, queue, shortPath, &foundShortestPath);
         }
     } else {
+        if(beginning2){
+            x = 0;
+            y = 19;
+            direction = 0;
+        }
+        beginning2 = false;
+
+        if(map[y][x].left != NULL){
+            if(shortPath.front()->x == map[y][x].left->x && shortPath.front()->y == map[y][x].left->y){
+                turnLeft();
+                moveForward();
+                directionLeft(&direction);
+                movement(&x, &y, &direction);
+                isNull = true;
+            }
+        }
+        else if(map[y][x].forward != NULL && !isNull){
+            if(shortPath.front()->x == map[y][x].forward->x && shortPath.front()->y == map[y][x].forward->y){
+                moveForward();
+                movement(&x, &y, &direction);
+                isNull = true;
+            }
+        } else if(map[y][x].right != NULL && !isNull){
+            if(shortPath.front()->x == map[y][x].right->x && shortPath.front()->y == map[y][x].right->y){
+                turnRight();
+                moveForward();
+                directionRight(&direction);
+                movement(&x, &y, &direction);
+                isNull = true;
+            }
+        } else {
+            turnRight();
+            turnRight();
+            directionRight(&direction);
+            directionRight(&direction);
+            isNull = true;
+        }
+
+        isNull = false;
+
         //re-enact calculated shortest path
         printUI("I calculated the shortest path");
     }
