@@ -30,34 +30,26 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
     square* s;
     while(!queue.empty() && (queue.front()->x != *xFinish || queue.front()->y != *yFinish)){
         s = queue.front();
-        if(s->forward != NULL){
-            if(!s->forward->visited){
+            if(s->forward != NULL && !s->forward->visited){
                 s->forward->visited = true;
-                s->forward->previousNode = queue.back();
+                s->forward->previousNode = s;
                 queue.push_back(s->forward);
                 //queue.back()->previousNode = s;
-            }
         }
-        if(s->right != NULL){
-            if(!s->right->visited){
+            if(s->right != NULL && !s->right->visited){
                 s->right->visited = true;
-                s->right->previousNode = queue.back();
+                s->right->previousNode = s;
                 queue.push_back(s->right);
-            }
         }
-        if(s->left != NULL){
-            if(!s->left->visited){
+            if(s->left != NULL && !s->left->visited){
                 s->left->visited = true;
-                s->left->previousNode = queue.back();
+                s->left->previousNode = s;
                 queue.push_back(s->left);
-            }
         }
-        if(s->bottom != NULL){
-            if(!s->bottom->visited){
+            if(s->bottom != NULL && !s->bottom->visited){
                 s->bottom->visited = true;
-                s->bottom->previousNode = queue.back();
+                s->bottom->previousNode = s;
                 queue.push_back(s->bottom);
-            }
         }
         queue.pop_front();
     }
@@ -318,7 +310,7 @@ void microMouseServer::studentAI()
             directionLeft(&direction);
             moveForward();
             movement(&x, &y, &direction);
-        } else if(map[y][x].right != NULL && map[y][x+1].right->shortest){
+        } else if(map[y][x].right != NULL && map[y][x].right->shortest){
             turnRight();
             directionRight(&direction);
             moveForward();
