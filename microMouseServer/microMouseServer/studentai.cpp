@@ -25,10 +25,10 @@ public:
     square *bottom;
 };
 
-void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, bool *foundShortestpath){
+void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, bool *foundShortestpath, int *xFinish, int *yFinish){
     queue.push_back(&map[MAZE_HEIGHT-1][0]);
     square* s;
-    while(!queue.empty()){
+    while(!queue.empty() && (queue.front()->x != *xFinish || queue.front()->y != *yFinish)){
         s = queue.front();
         if(s->forward != NULL){
             if(!s->forward->visited){
@@ -129,8 +129,8 @@ void microMouseServer::studentAI()
     static int lefts = 0;
     static int rights = 0;
 
-    static int xFinish;
-    static int yFinish;
+    static int xFinish = 0;
+    static int yFinish = 0;
 
     static bool beginning = true;
     static bool beginning2 = true;
@@ -291,7 +291,7 @@ void microMouseServer::studentAI()
             rights=0;
             xFinish = x;
             yFinish = y;
-            shortestPathCalculation(map, queue, &foundShortestPath);
+            shortestPathCalculation(map, queue, &foundShortestPath, &xFinish, &yFinish);
         } else if(rights>=3){
             printArray(map);
             foundFinish();
@@ -299,7 +299,7 @@ void microMouseServer::studentAI()
             rights=0;
             xFinish = x;
             yFinish = y;
-            shortestPathCalculation(map, queue, &foundShortestPath);
+            shortestPathCalculation(map, queue, &foundShortestPath, &xFinish, &yFinish);
         }
     } else {
         printArray(map);
@@ -310,15 +310,15 @@ void microMouseServer::studentAI()
         }
         beginning2 = false;
 
-        if(map[y][x].forward->shortest){
+        if(map[y][x].forward != NULL && map[y][x].forward->shortest){
             moveForward();
             movement(&x, &y, &direction);
-        } else if(map[y][x].left->shortest){
+        } else if(map[y][x].left != NULL && map[y][x].left->shortest){
             turnLeft();
             directionLeft(&direction);
             moveForward();
             movement(&x, &y, &direction);
-        } else if(map[y][x+1].right->shortest){
+        } else if(map[y][x].right != NULL && map[y][x+1].right->shortest){
             turnRight();
             directionRight(&direction);
             moveForward();
