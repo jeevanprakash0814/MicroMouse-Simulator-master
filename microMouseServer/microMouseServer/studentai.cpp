@@ -31,7 +31,7 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
     while(!queue.empty()){
         s = queue.front();
         if(s->forward != NULL){
-            if(s->forward->visited == false){
+            if(!s->forward->visited){
                 s->forward->visited = true;
                 s->forward->previousNode = queue.back();
                 queue.push_back(s->forward);
@@ -39,21 +39,21 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
             }
         }
         if(s->right != NULL){
-            if(s->right->visited == false){
+            if(!s->right->visited){
                 s->right->visited = true;
                 s->right->previousNode = queue.back();
                 queue.push_back(s->right);
             }
         }
         if(s->left != NULL){
-            if(s->left->visited == false){
+            if(!s->left->visited){
                 s->left->visited = true;
                 s->left->previousNode = queue.back();
                 queue.push_back(s->left);
             }
         }
         if(s->bottom != NULL){
-            if(s->bottom->visited == false){
+            if(!s->bottom->visited){
                 s->bottom->visited = true;
                 s->bottom->previousNode = queue.back();
                 queue.push_back(s->bottom);
@@ -72,9 +72,11 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
         currentNode = currentNode->previousNode;
     }*/
 
-    while(x != 0 && y != 19){
+    while((x != 0) || (y != 19)){
         currentNode->shortest = true;
-        currentNode = currentNode->previousNode;
+        if(currentNode->previousNode != NULL){
+            currentNode = currentNode->previousNode;
+        }
         x = currentNode->x;
         y = currentNode->y;
     }
@@ -280,7 +282,7 @@ void microMouseServer::studentAI()
         }
 
         map[y][x].visits += 1;
-        map[y][x].visited = true;
+        //map[y][x].visited = true;
 
         if(lefts>=3){
             printArray(map);
