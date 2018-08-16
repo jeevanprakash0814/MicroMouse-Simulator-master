@@ -302,6 +302,77 @@ void microMouseServer::studentAI()
         }
         beginning2 = false;
 
+        switch(direction){
+            case 0:
+            if(map[y][x].forward != NULL && map[y][x].forward->shortest){
+                moveForward();
+                movement(&x, &y, &direction);
+            } else if(map[y][x].left != NULL && map[y][x].left->shortest){
+                turnLeft();
+                directionLeft(&direction);
+                moveForward();
+                movement(&x, &y, &direction);
+            } else if(map[y][x].right != NULL && map[y][x].right->shortest){
+                turnRight();
+                directionRight(&direction);
+                moveForward();
+                movement(&x, &y, &direction);
+            }
+                break;
+            case 1:
+                if(map[y][x].forward != NULL && map[y][x].forward->shortest){
+                    turnLeft();
+                    directionLeft(&direction);
+                    moveForward();
+                    movement(&x, &y, &direction);
+                } else if(map[y][x].right != NULL && map[y][x].right->shortest){
+                    moveForward();
+                    movement(&x, &y, &direction);
+                } else if(map[y][x].bottom != NULL && map[y][x].bottom->shortest){
+                    turnRight();
+                    directionRight(&direction);
+                    turnRight();
+                    directionRight(&direction);
+                }
+                break;
+            case 2:
+                if(map[y][x].bottom != NULL && map[y][x].bottom->shortest){
+                    moveForward();
+                    movement(&x, &y, &direction);
+                } else if(map[y][x].right != NULL && map[y][x].right->shortest){
+                    turnLeft();
+                    directionLeft(&direction);
+                    moveForward();
+                    movement(&x, &y, &direction);
+                } else if(map[y][x].left != NULL && map[y][x].left->shortest){
+                    turnRight();
+                    directionRight(&direction);
+                    turnRight();
+                    directionRight(&direction);
+                }
+                break;
+            case 3:
+                if(map[y][x].bottom != NULL && map[y][x].bottom->shortest){
+                    turnLeft();
+                    directionLeft(&direction);
+                    moveForward();
+                    movement(&x, &y, &direction);
+                } else if(map[y][x].left != NULL && map[y][x].left->shortest){
+                    moveForward();
+                    movement(&x, &y, &direction);
+                } else if(map[y][x].forward != NULL && map[y][x].forward->shortest){
+                    turnRight();
+                    directionRight(&direction);
+                    turnRight();
+                    directionRight(&direction);
+                }
+                break;
+            }
+        if(x == xFinish && y == yFinish){
+            printUI("Shortest Path Complete.");
+            foundFinish();
+        }
+        /*
         if(map[y][x].forward != NULL && map[y][x].forward->shortest){
             moveForward();
             movement(&x, &y, &direction);
@@ -321,6 +392,7 @@ void microMouseServer::studentAI()
             turnRight();
             directionRight(&direction);
         }
+        */
         /*
         if(map[y][x].left != NULL){
             if(shortPath.front()->x == map[y][x].left->x && shortPath.front()->y == map[y][x].left->y){
