@@ -25,7 +25,7 @@ public:
     square *bottom;
 };
 
-void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, list<square*> shortPath, bool *foundShortestpath){
+void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, bool *foundShortestpath){
     queue.push_back(&map[MAZE_HEIGHT-1][0]);
     square* s;
     while(!queue.empty()){
@@ -66,18 +66,18 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
     int x = currentNode->x;
     int y = currentNode->y;
 
+    /*
     while(currentNode->previousNode != NULL){
         shortPath.push_back(currentNode);
         currentNode = currentNode->previousNode;
-    }
+    }*/
 
-    /*
     while(x != 0 && y != 19){
         currentNode->shortest = true;
         currentNode = currentNode->previousNode;
         x = currentNode->x;
         y = currentNode->y;
-    }*/
+    }
 
     *foundShortestpath = true;
 }
@@ -139,7 +139,6 @@ void microMouseServer::studentAI()
     static int direction = 0;
 
     static list<square*> queue;
-    static list<square*> shortPath;
     static square map[MAZE_HEIGHT][MAZE_WIDTH];
 
     if(beginning){
@@ -290,7 +289,7 @@ void microMouseServer::studentAI()
             rights=0;
             xFinish = x;
             yFinish = y;
-            shortestPathCalculation(map, queue, shortPath, &foundShortestPath);
+            shortestPathCalculation(map, queue, &foundShortestPath);
         } else if(rights>=3){
             printArray(map);
             foundFinish();
@@ -298,9 +297,10 @@ void microMouseServer::studentAI()
             rights=0;
             xFinish = x;
             yFinish = y;
-            shortestPathCalculation(map, queue, shortPath, &foundShortestPath);
+            shortestPathCalculation(map, queue, &foundShortestPath);
         }
     } else {
+        printArray(map);
         if(beginning2){
             x = 0;
             y = 19;
@@ -308,6 +308,26 @@ void microMouseServer::studentAI()
         }
         beginning2 = false;
 
+        if(map[y][x].forward->shortest){
+            moveForward();
+            movement(&x, &y, &direction);
+        } else if(map[y][x].left->shortest){
+            turnLeft();
+            directionLeft(&direction);
+            moveForward();
+            movement(&x, &y, &direction);
+        } else if(map[y][x+1].right->shortest){
+            turnRight();
+            directionRight(&direction);
+            moveForward();
+            movement(&x, &y, &direction);
+        } else {
+            turnRight();
+            directionRight(&direction);
+            turnRight();
+            directionRight(&direction);
+        }
+        /*
         if(map[y][x].left != NULL){
             if(shortPath.front()->x == map[y][x].left->x && shortPath.front()->y == map[y][x].left->y){
                 turnLeft();
@@ -342,7 +362,7 @@ void microMouseServer::studentAI()
         isNull = false;
 
         //re-enact calculated shortest path
-        printUI("I calculated the shortest path");
+        */
     }
 
 }
