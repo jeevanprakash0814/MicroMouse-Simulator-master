@@ -66,6 +66,11 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
                 queue.push_back(s->bottom);
         }
         queue.pop_front();
+        //Using a list data structure, references to adjacent squares starting from the start are added to the queue
+        //It keeps repeating the process with the additional part of removing the front square reference in the queue
+        //While moving one square at a time till it hits the end the references to the shortest path is held in the previousNode references of s the square variable
+        //The next while loop takes s and retraces through all the previousNode square references found in it while setting the values of the shortest bool attribute in all of them to true
+        //This allows for the mouse to trace the shortest path when it is run the second time
     }
 
     square* currentNode = s;
