@@ -25,6 +25,19 @@ public:
     square *bottom;
 };
 
+void printShortestPath(square (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
+    for(int i=0; i<MAZE_HEIGHT; i++){
+        for(int j=0; j<MAZE_HEIGHT; j++){
+            if(map[i][j].shortest){
+                cout <<"1"<<"  ";
+            } else {
+                cout <<"0"<<"  ";
+            }
+        }
+        cout <<endl;
+    }
+}
+
 void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, bool *foundShortestpath, int *xFinish, int *yFinish){
     queue.push_back(&map[MAZE_HEIGHT-1][0]);
     square* s;
@@ -74,6 +87,7 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
     }
 
     *foundShortestpath = true;
+    printShortestPath(&map);
 }
 
 void populateArray(square (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
@@ -294,7 +308,7 @@ void microMouseServer::studentAI()
             shortestPathCalculation(map, queue, &foundShortestPath, &xFinish, &yFinish);
         }
     } else {
-        printArray(map);
+        //printArray(map);
         if(beginning2){
             x = 0;
             y = 19;
