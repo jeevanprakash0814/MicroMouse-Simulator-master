@@ -41,7 +41,7 @@ void printShortestPath(square (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
 void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square*> queue, bool *foundShortestpath, int *xFinish, int *yFinish){
     queue.push_back(&map[MAZE_HEIGHT-1][0]);
     square* s = queue.front();
-    while(!queue.empty() && (queue.front()->x != *xFinish || queue.front()->y != *yFinish)){
+    while(!queue.empty() && (s->x != *xFinish || s->y != *yFinish)){
         s = queue.front();
             if(s->forward != NULL && !s->forward->visited){
                 s->forward->visited = true;
