@@ -87,7 +87,7 @@ void shortestPathCalculation(square (&map)[MAZE_HEIGHT][MAZE_WIDTH], list<square
     }
 
     *foundShortestpath = true;
-    printShortestPath(&map);
+    printShortestPath(map);
 }
 
 void populateArray(square (&map)[MAZE_HEIGHT][MAZE_WIDTH]){
@@ -168,18 +168,21 @@ void microMouseServer::studentAI()
             } else {
                 timesLeft = map[y][x - 1].visits;
                 map[y][x].left = &map[y][x - 1];
+                map[y][x-1].right = &map[y][x];
             }
             if(isWallForward()){
                 timesForward = INT_MAX;
             } else {
                 timesForward = map[y - 1][x].visits;
                 map[y][x].forward = &map[y - 1][x];
+                map[y - 1][x].bottom = &map[y][x];
             }
             if(isWallRight()){
                 timesRight = INT_MAX;
             } else {
                 timesRight = map[y][x + 1].visits;
                 map[y][x].right = &map[y][x + 1];
+                map[y][x + 1].left = &map[y][x];
             }
             if(!(y+1>19)){
                 map[y][x].bottom = &map[y + 1][x];
@@ -191,19 +194,21 @@ void microMouseServer::studentAI()
             } else {
                 timesLeft = map[y - 1][x].visits;
                 map[y][x].forward = &map[y - 1][x];
-
+                map[y - 1][x].bottom = &map[y][x];
             }
             if(isWallForward()){
                 timesForward = INT_MAX;
             } else {
                 timesForward = map[y][x + 1].visits;
                 map[y][x].right = &map[y][x + 1];
+                map[y][x + 1].left = &map[y][x];
             }
             if(isWallRight()){
                 timesRight = INT_MAX;
             } else {
                 timesRight = map[y + 1][x].visits;
                 map[y][x].bottom = &map[y + 1][x];
+                map[y + 1][x].forward = &map[y][x];
             }
             if(!(x-1<0)){
                 map[y][x].left = &map[y][x - 1];
@@ -215,18 +220,21 @@ void microMouseServer::studentAI()
             } else {
                 timesLeft = map[y][x + 1].visits;
                 map[y][x].right = &map[y][x + 1];
+                map[y][x + 1].left = &map[y][x];
             }
             if(isWallForward()){
                 timesForward = INT_MAX;
             } else {
                 timesForward = map[y + 1][x].visits;
                 map[y][x].bottom = &map[y + 1][x];
+                map[y + 1][x].forward = &map[y][x];
             }
             if(isWallRight()){
                 timesRight = INT_MAX;
             } else {
                 timesRight = map[y][x - 1].visits;
                 map[y][x].left = &map[y][x - 1];
+                map[y][x - 1].right = &map[y][x];
             }
             if(!(y-1<0)){
                 map[y][x].forward = &map[y - 1][x];
@@ -238,18 +246,21 @@ void microMouseServer::studentAI()
             } else {
                 timesLeft = map[y + 1][x].visits;
                 map[y][x].bottom = &map[y + 1][x];
+                map[y + 1][x].forward = &map[y][x];
             }
             if(isWallForward()){
                 timesForward = INT_MAX;
             } else {
                 timesForward = map[y][x - 1].visits;
                 map[y][x].left = &map[y][x - 1];
+                map[y][x - 1].right = &map[y][x];
             }
             if(isWallRight()){
                 timesRight = INT_MAX;
             } else {
                 timesRight = map[y - 1][x].visits;
                 map[y][x].forward = &map[y - 1][x];
+                map[y - 1][x].bottom = &map[y][x];
             }
             if(!(x+1>19)){
                 map[y][x].right = &map[y][x + 1];
@@ -345,8 +356,8 @@ void microMouseServer::studentAI()
                 } else if(map[y][x].bottom != NULL && map[y][x].bottom->shortest){
                     turnRight();
                     directionRight(&direction);
-                    turnRight();
-                    directionRight(&direction);
+                    moveForward();
+                    movement(&x, &y, &direction);
                 }
                 break;
             case 2:
@@ -361,8 +372,8 @@ void microMouseServer::studentAI()
                 } else if(map[y][x].left != NULL && map[y][x].left->shortest){
                     turnRight();
                     directionRight(&direction);
-                    turnRight();
-                    directionRight(&direction);
+                    moveForward();
+                    movement(&x, &y, &direction);
                 }
                 break;
             case 3:
@@ -377,8 +388,8 @@ void microMouseServer::studentAI()
                 } else if(map[y][x].forward != NULL && map[y][x].forward->shortest){
                     turnRight();
                     directionRight(&direction);
-                    turnRight();
-                    directionRight(&direction);
+                    moveForward();
+                    movement(&x, &y, &direction);
                 }
                 break;
             }
